@@ -71,6 +71,7 @@ async def call_llm(questions: str, data_files: dict) -> str:
                 "   ```"
                 " - **CRITICAL STEP**: When printing the final output, use this encoder with `json.dumps()`: "
                 "   `print(json.dumps(your_results_array, cls=NpEncoder))`"
+                " - **CRITICAL STEP**: The script must use valid UTF-8 characters for all strings. For the degree symbol (°), ensure you use the correct UTF-8 character directly or its Unicode escape sequence \u00b0.For example plt.ylabel('Temperature (°C)') as plt.ylabel('Temperature (\u00b0C)') and ensure the script is saved and interpreted as UTF-8"
                 "Before performing any calculations, verify that the required columns exist in the DataFrame. If a key column like gross is not found, attempt to find a similar column name (e.g., 'worldwide gross') or return a JSON error object indicating the missing data."
                 "After loading any tabular data into a pandas DataFrame, immediately normalize the column names using df.columns = df.columns.str.lower().str.strip() to ensure consistency."
                 "Return ONLY the executable Python code, starting with the plan comment block. Do not include any markdown code blocks (```python) or conversational text. If an error occurs, the script should output a default JSON array with an error object in the format specified in `questions.txt`."
