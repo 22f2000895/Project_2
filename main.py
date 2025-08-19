@@ -113,7 +113,7 @@ async def call_llm(questions: str, data_files: dict) -> str:
         return json.dumps({"error": "Invalid LLM response format", "details": str(e)})
 
 
-@app.post("/api/")
+@app.post("/")
 async def analyze_data(
     questions_file: UploadFile = File(..., alias="questions.txt"),
     data_files: Optional[List[UploadFile]] = File(None)

@@ -18,9 +18,9 @@ frozenlist==1.7.0
 h11==0.16.0
 idna==3.10
 kiwisolver==1.4.9
-lxml==6.0.0
 matplotlib==3.10.5
 multidict==6.6.4
+networkx==3.5
 numpy==2.3.2
 packaging==25.0
 pandas==2.3.1
@@ -30,7 +30,6 @@ pydantic==2.11.7
 pydantic_core==2.33.2
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
-python-dotenv==1.1.1
 python-multipart==0.0.20
 pytz==2025.2
 requests==2.32.4
