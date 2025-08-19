@@ -6,7 +6,7 @@ import tempfile
 import asyncio
 import subprocess
 import aiohttp
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, Request, UploadFile, File, Form
 from typing import List, Optional
 import numpy as np # Import numpy for type checking
 import pandas as pd # Import pandas for type checking
@@ -115,16 +115,20 @@ async def call_llm(questions: str, data_files: dict) -> str:
 
 
 @app.post("/")
-async def analyze_data(
-    questions_file: UploadFile = File(..., alias="questions.txt"),
-    data_files: Optional[List[UploadFile]] = File(None)
-):
-    questions = await questions_file.read()
-
+async def analyze_data(request: Request):
+    questions_file_name = "questions.txt"
     data_content = {}
-    if data_files:
-        for file in data_files:
-            data_content[file.filename] = await file.read()
+    questions = None
+
+    async for form_part in request.form():
+        if form_part.name == questions_file_name:
+            questions = await form_part.read()
+        elif form_part.name and form_part.filename:
+            data_content[form_part.filename] = await form_part.read()
+    
+    if not questions:
+        return {"error": "Missing required 'questions.txt' file."}
+
 
     llm_script = await call_llm(questions.decode(), data_content)
 
@@ -160,8 +164,6 @@ async def analyze_data(
     except subprocess.CalledProcessError as e:
         return {"error": "Subprocess execution failed", "details": e.stderr}
     except json.JSONDecodeError as e:
-        # The JSONDecodeError occurs here, so the original stdout is in e.doc
-        # Check if the captured stdout contains the known error message
         if "Object of type int64 is not JSON serializable" in process.stdout:
             error_message = "The LLM failed to convert a numeric type (e.g., numpy.int64) to a standard Python type for JSON serialization. This is a common issue with Pandas/Numpy data. The prompt needs to be more explicit."
             return {"error": "Subprocess output was not valid JSON", "details": error_message}
