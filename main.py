@@ -57,7 +57,7 @@ async def call_llm(questions: str, data_files: dict) -> str:
                 " - **Execute Tasks**: Use the approved libraries to perform the analysis specified in the plan. This includes using `duckdb` for SQL, `requests` and `BeautifulSoup4` for web scraping, `Pillow` for images, and `subprocess` to run attached Python scripts if necessary."
                 " - **Generate Output**: For all questions, compute the answers and format them as a single Python object. For charts or images, save the figure to an in-memory buffer and encode it as a base64 PNG string (`data:image/png;base64,...`). "
                 " - **Format Final Response**: Create a single Python object, which must be a **JSON array**, containing an answer for each question. Strictly adhere to the output format specified in `questions.txt`."
-                " - **CRITICAL STEP**: The script must include a custom JSON encoder to handle NumPy data types. Use the provided function below: "
+                " - **CRITICAL STEP**: The script **must include** a custom JSON encoder to handle NumPy data types. Use the provided function below: "
                 "   ```python"
                 "   class NpEncoder(json.JSONEncoder):"
                 "       def default(self, obj):"
