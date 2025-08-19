@@ -120,10 +120,14 @@ async def analyze_data(request: Request):
     data_content = {}
     questions = None
 
-    async for form_part in request.form():
-        if form_part.name == questions_file_name:
+    # Await the form() call once to get the form data
+    form_data = await request.form()
+    
+    # Iterate over the values in the Form data object
+    for name, form_part in form_data.items():
+        if name == questions_file_name:
             questions = await form_part.read()
-        elif form_part.name and form_part.filename:
+        elif form_part.filename: # check if the part is a file
             data_content[form_part.filename] = await form_part.read()
     
     if not questions:
